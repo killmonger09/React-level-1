@@ -30,6 +30,7 @@ function App() {
       <div>
         {todos.map(todo => {
           <p key= {todo.id}>
+            <span>{todo.id}</span>
           <span>{todo.text}</span>
           <button
         onClick={handleDelete}

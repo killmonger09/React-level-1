@@ -35,7 +35,9 @@ function App() {
       <div>
         {todos.map((todo) => (
           <p key={todo.id}>
+            
             <span>{todo.text}</span>
+      
           <button
           onClick={() => handleDelete(todo.id)}
           >Delete</button></p>
