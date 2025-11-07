@@ -6,12 +6,12 @@ function App() {
 
 
   const handleDelete = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos(todos.filter(todo => todo.id === id));
   }
 
   const handleAdd = () => {
           if (inputValue.trim() === "") return;
-          const newTodo = { id: Date.now(), text: inputValue };
+          const newTodo = { id: Date.now(), text: inputValue , completed: 'false'};
           setTodos([...todos, newTodo]);
           setInputValue("");
         }
@@ -35,7 +35,7 @@ function App() {
       <div>
         {todos.map((todo) => (
           <p key={todo.id}>
-            
+            <input type="checkbox" className={todo.completed ? 'marked' : '' }/>
             <span>{todo.text}</span>
       
           <button

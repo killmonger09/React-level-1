@@ -1,31 +1,43 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function App() {
-  const [city, setCity] = useState('');
+   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [error, setError] = useState("")
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const API_KEY = "31b0cc0a5dccdb1ef2cdb980ddded1eb";
 
-  const fetchWeather = async () => {
+  const fetchWeather = async (cityName = city) => {
+    console.log(cityName)
+    if (!cityName) return;
+    setLoading(true);
     try {
-      setError("");
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`
       );
-      const data = await response.json();
-
-      if (data.cod === '404') {
-        setError("City not found");
-        setWeather(null);
+      const data = await res.json();
+      if (data.cod === 200) {
+        setWeather(data);
+        localStorage.setItem("city", JSON.stringify(cityName));
+      } else {
+        setError(data.message);
       }
-      setWeather(data);
-    }
-    catch (error) {
-      console.error(err)
+    } catch (err) {
+      setError("Failed to fetch weather");
+    } finally {
+      setLoading(false);
     }
   };
+
+  // 👇 Run on page load
+  useEffect(() => {
+    const savedCity = JSON.parse(localStorage.getItem("city"));
+    if (savedCity) {
+      setCity(savedCity);
+      fetchWeather(savedCity);
+    }
+  }, []);
 
   return (
     <>
